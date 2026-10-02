@@ -1,0 +1,82 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ticketing-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - ticketing-network
+
+  identity.api:
+    image: ${DOCKER_REGISTRY-}identityapi
+    build:
+      context: Identity.API
+      dockerfile: Dockerfile
+    container_name: ticketing-identity-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TicketingIdentity;User=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=TicketingIdentity
+      - Jwt__Audience=TicketingClients
+    ports:
+      - "5001:8080"
+    depends_on:
+      - sqlserver
+    networks:
+      - ticketing-network
+
+  eventcatalog.api:
+    image: ${DOCKER_REGISTRY-}eventcatalogapi
+    build:
+      context: .
+      dockerfile: EventCatalog.API/Dockerfilev
+    container_name: ticketing-eventcatalog-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TicketingEventCatalog;User=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=TicketingIdentity
+      - Jwt__Audience=TicketingClients
+    ports:
+      - "5002:8080"
+    depends_on:
+      - sqlserver
+    networks:
+      - ticketing-network
+
+  booking.api:
+    image: ${DOCKER_REGISTRY-}bookingapi
+    build:
+      context: Booking.API
+      dockerfile: Dockerfile
+    container_name: ticketing-booking-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TicketingBooking;User=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=TicketingIdentity
+      - Jwt__Audience=TicketingClients
+      - EventCatalogUrl=http://eventcatalog.api:8080
+    ports:
+      - "5003:8080"
+    depends_on:
+      - sqlserver
+      - eventcatalog.api
+    networks:
+      - ticketing-network
+
+networks:
+  ticketing-network:
+    driver: bridge
+
+volumes:
+  sqlserver-data:
