@@ -1,3 +1,6 @@
+# 👤 Author
+## Mohamed Salah
+
 # 🎟️ Ticketing System
 
 A microservices-based ticketing platform built with **.NET 9**, **Docker**, and **SQL Server**. The system handles event management, seat reservation, and booking workflows with JWT-based authentication across all services.
@@ -85,16 +88,32 @@ calling EventCatalog.API to reserve or release seats.
 
 ---
 
-## 📦 Getting Started
+
 
 ### Prerequisites
 - [.NET 9 SDK](https://dotnet.microsoft.com/download)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - (Optional) [SQL Server Management Studio](https://aka.ms/ssms) for inspecting the database
 
-### Option 1: Run with Docker (Recommended)
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/MoSalah-tech/TicketingSystem.git
-   cd TicketingSystem
+## 🗺️ Roadmap 
+
+- ☑ Event & Venue management
+- ☑ Seat generation and reservation
+- ☑ Booking creation and cancellation
+- ☑ JWT authentication across services
+- ☑ Role-based authorization
+- ☑ Docker support
+- ☑ Unit tests for Booking service
+- □ Booking expiration background worker (auto-release stale reservations)
+- □ FluentValidation for input validation
+- □ Global exception handling middleware
+- □ Pagination, filtering, and sorting
+- □ RabbitMQ for async event-driven communication
+- □ Payment service
+- □ SignalR for real-time seat updates
+- □ API Gateway (YARP)
+- □ Integration tests with Testcontainers
+- □ CI/CD pipeline with GitHub Actions
+
+   
