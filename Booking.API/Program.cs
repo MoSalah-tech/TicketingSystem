@@ -1,5 +1,6 @@
 using Booking.API.Data;
 using Booking.API.Services;
+using Booking.API.Workers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -37,6 +38,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
         };
     });
+// Named HttpClient for the background worker (separate from the typed BookingService client)
+builder.Services.AddHttpClient("Event Catalog", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["EventCatalogUrl"] ?? "https://localhost:7266");
+});
+
+// Service-to-service token provider
+builder.Services.AddScoped<IServiceTokenProvider, ServiceTokenProvider>();
+// Background worker
+builder.Services.AddHostedService<BookingExpirationWorker>();
 
 builder.Services.AddAuthorization();
 
