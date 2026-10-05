@@ -105,7 +105,7 @@ calling EventCatalog.API to reserve or release seats.
 - ☑ Role-based authorization
 - ☑ Docker support
 - ☑ Unit tests for Booking service
-- □ Booking expiration background worker (auto-release stale reservations)
+- ☑ Booking expiration background worker (auto-release stale reservations)
 - □ FluentValidation for input validation
 - □ Global exception handling middleware
 - □ Pagination, filtering, and sorting
