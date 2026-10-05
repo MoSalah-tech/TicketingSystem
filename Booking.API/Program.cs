@@ -1,12 +1,15 @@
 using Booking.API.Data;
 using Booking.API.Services;
 using Booking.API.Workers;
+using Booking.API.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using FluentValidation;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text;
+using Booking.API.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,10 +51,17 @@ builder.Services.AddHttpClient("Event Catalog", client =>
 builder.Services.AddScoped<IServiceTokenProvider, ServiceTokenProvider>();
 // Background worker
 builder.Services.AddHostedService<BookingExpirationWorker>();
+// FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<CreateBookingValidator>();
+builder.Services.AddScoped<ValidationFilter>();
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => 
+{
+    options.Filters.Add<ValidationFilter>();
+
+});
 builder.Services.AddEndpointsApiExplorer();
 
 

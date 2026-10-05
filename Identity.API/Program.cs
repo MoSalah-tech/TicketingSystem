@@ -1,5 +1,7 @@
+using FluentValidation;
 using Identity.API.Data;
 using Identity.API.Services;
+using Identity.API.Validators;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,9 @@ builder.Services.AddDbContext<IdentityDbContext>(options =>
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+// Validation
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

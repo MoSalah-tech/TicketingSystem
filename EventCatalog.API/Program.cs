@@ -11,6 +11,8 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using FluentValidation;
+using EventCatalog.Application.Events.Validators;
 
 
 
@@ -47,6 +49,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
         };
     });
+
+// Validation
+builder.Services.AddValidatorsFromAssemblyContaining<CreateEventValidator>();
 
 builder.Services.AddAuthorization();
 
