@@ -106,7 +106,7 @@ calling EventCatalog.API to reserve or release seats.
 - ☑ Docker support
 - ☑ Unit tests for Booking service
 - ☑ Booking expiration background worker (auto-release stale reservations)
-- □ FluentValidation for input validation
+- ☑ FluentValidation for input validation
 - □ Global exception handling middleware
 - □ Pagination, filtering, and sorting
 - □ RabbitMQ for async event-driven communication
